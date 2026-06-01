@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Callista 卡莉絲塔的占卜小舖</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Noto+Serif+TC:wght@300;400;500;600&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A; --gold-pale: #F5E8C0;
+    --deep: #0D0A14; --mid: #2A1F3D; --surface: #1E1630; --surface2: #251C38;
+    --text: #F0E8D8; --text-muted: #9A8AAA;
+  }
+  html, body { width: 100%; min-height: 100vh; background: var(--deep); color: var(--text); font-family: 'Noto Serif TC', serif; overflow-x: hidden; }
+  body {
+    background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(138,90,220,0.18) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(90,60,160,0.12) 0%, transparent 50%), var(--deep);
+    position: relative;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 40% 8%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 25%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 12%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 55%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 45%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 90% 55%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 5% 75%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 70%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 78% 68%, rgba(255,255,255,0.35) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 20% 92%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 95% 88%, rgba(255,255,255,0.3) 0%, transparent 100%);
+  }
+  .page-wrap { max-width: 430px; margin: 0 auto; padding: 0 0 40px; position: relative; z-index: 1; }
+
+  /* HEADER */
+  .header { text-align: center; padding: 36px 24px 28px; position: relative; }
+  .header::after { content: ''; display: block; width: 60%; height: 1px; margin: 18px auto 0; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .brand-en {
+    font-family: 'Cinzel Decorative', serif; font-size: 26px; font-weight: 700; letter-spacing: 0.08em;
+    background: linear-gradient(135deg, #C9A84C 0%, #F5E8C0 45%, #C9A84C 70%, #E8C97A 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2;
+  }
+  .brand-zh { font-family: 'Noto Serif TC', serif; font-size: 13px; font-weight: 300; letter-spacing: 0.25em; color: var(--gold-light); margin-top: 6px; opacity: 0.9; }
+  .header-deco { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 11px; letter-spacing: 0.2em; color: var(--text-muted); margin-top: 10px; }
+
+  /* MOON DECO */
+  .moon-deco { display: flex; justify-content: center; align-items: center; gap: 12px; padding: 6px 0 20px; color: var(--gold); font-size: 18px; }
+  .moon-line { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); opacity: 0.5; }
+  .moon-line.r { background: linear-gradient(90deg, var(--gold), transparent); }
+
+  /* INSTRUCTION */
+  .instruction { text-align: center; padding: 0 24px 24px; font-size: 13px; color: var(--text-muted); font-family: 'Noto Serif TC', serif; font-weight: 300; letter-spacing: 0.08em; line-height: 1.7; }
+
+  /* DRAW BUTTON */
+  .draw-btn-wrap { display: flex; justify-content: center; padding: 0 24px 32px; }
+  .draw-btn { position: relative; background: none; border: none; cursor: pointer; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+  .draw-btn-inner {
+    position: relative; padding: 14px 40px;
+    background: linear-gradient(135deg, #1A1030 0%, #2D1D50 50%, #1A1030 100%);
+    border: 1px solid var(--gold); border-radius: 50px; overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  }
+  .draw-btn-inner::before { content: ''; position: absolute; inset: 2px; border: 1px solid rgba(201,168,76,0.3); border-radius: 46px; pointer-events: none; }
+  .draw-btn-inner::after {
+    content: ''; position: absolute; inset: -100%;
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(201,168,76,0.15) 60deg, transparent 120deg);
+    animation: rotate-glow 4s linear infinite;
+  }
+  @keyframes rotate-glow { to { transform: rotate(360deg); } }
+  .draw-btn:active .draw-btn-inner { transform: scale(0.95); }
+  .draw-btn:hover .draw-btn-inner { box-shadow: 0 0 30px rgba(201,168,76,0.25), 0 0 60px rgba(138,90,220,0.15); }
+  .draw-btn-text { position: relative; z-index: 1; font-family: 'Noto Serif TC', serif; font-size: 15px; font-weight: 400; letter-spacing: 0.3em; color: var(--gold-light); display: flex; align-items: center; gap: 10px; }
+  .draw-btn-text span.en { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; color: var(--gold); opacity: 0.8; letter-spacing: 0.15em; }
+
+  /* POSITION LABELS */
+  .position-labels { display: flex; gap: 10px; justify-content: center; padding: 0 16px 16px; }
+  .pos-label { flex: 1; max-width: 120px; text-align: center; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; }
+
+  /* CARDS AREA */
+  .cards-area { padding: 0 16px 28px; display: flex; gap: 10px; justify-content: center; }
+  .card-slot { flex: 1; max-width: 120px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .card-frame {
+    width: 100%; aspect-ratio: 2/3.5; position: relative; border-radius: 10px; overflow: hidden;
+    background: var(--surface); border: 1px solid rgba(201,168,76,0.4);
+    box-shadow: 0 0 0 1px rgba(201,168,76,0.1), inset 0 0 20px rgba(0,0,0,0.5);
+    transition: box-shadow 0.4s ease;
+  }
+  .card-frame.revealed { box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.3), 0 0 20px rgba(201,168,76,0.1); }
+  .card-frame.flipping { animation: card-flip 0.7s cubic-bezier(0.4,0,0.2,1); }
+  @keyframes card-flip {
+    0%  { transform: rotateY(0deg) scale(1); }
+    40% { transform: rotateY(90deg) scale(0.95); }
+    41% { transform: rotateY(-90deg) scale(0.95); }
+    100%{ transform: rotateY(0deg) scale(1); }
+  }
+  .card-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card-frame.reversed img { transform: rotate(180deg); }
+  .card-back { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1A1030 0%, #2D1D50 100%); }
+  .card-back-pattern { position: absolute; inset: 8px; border: 1px solid rgba(201,168,76,0.3); border-radius: 6px; }
+  .card-back-inner { font-size: 28px; color: var(--gold); opacity: 0.4; position: relative; z-index: 1; }
+  .card-label { text-align: center; width: 100%; }
+  .card-position { font-family: 'Cormorant Garamond', serif; font-size: 10px; font-style: italic; color: var(--text-muted); letter-spacing: 0.1em; margin-bottom: 3px; }
+  .card-name { font-family: 'Noto Serif TC', serif; font-size: 11px; font-weight: 400; color: var(--gold-light); letter-spacing: 0.05em; line-height: 1.4; }
+  .card-orientation { display: inline-block; font-family: 'Noto Serif TC', serif; font-size: 9px; color: var(--deep); padding: 1px 6px; border-radius: 20px; margin-top: 4px; font-weight: 500; letter-spacing: 0.05em; }
+  .card-orientation.upright { background: var(--gold); }
+  .card-orientation.reversed { background: #9A7CC0; color: #F0E8F8; }
+
+  /* DIVIDER */
+  .section-divider { display: flex; align-items: center; gap: 12px; padding: 8px 24px 24px; color: rgba(201,168,76,0.4); font-size: 14px; }
+  .divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); }
+
+  /* ACTION BUTTONS */
+  .actions { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; }
+  .action-label { font-family: 'Noto Serif TC', serif; font-size: 11px; color: var(--text-muted); text-align: center; letter-spacing: 0.15em; margin-bottom: 4px; }
+  .btn-row { display: flex; gap: 8px; }
+  .action-btn {
+    flex: 1; background: var(--surface2); border: 1px solid rgba(201,168,76,0.25); border-radius: 10px;
+    padding: 11px 8px; color: var(--text); font-family: 'Noto Serif TC', serif; font-size: 12px;
+    letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s ease;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .action-btn:active { transform: scale(0.96); background: rgba(201,168,76,0.1); }
+  .action-btn.copy-btn { border-color: rgba(201,168,76,0.4); color: var(--gold-light); }
+  .action-btn .btn-icon { width: 16px; height: 16px; flex-shrink: 0; }
+  .action-btn .btn-label { font-size: 11px; font-family: 'Cormorant Garamond', serif; font-style: italic; }
+  .ai-btn-chatgpt { border-color: rgba(116,196,157,0.4); }
+  .ai-btn-chatgpt:active { background: rgba(116,196,157,0.1); }
+  .ai-btn-gemini { border-color: rgba(138,100,220,0.4); }
+  .ai-btn-gemini:active { background: rgba(138,100,220,0.1); }
+  .ai-btn-claude { border-color: rgba(210,140,70,0.4); }
+  .ai-btn-claude:active { background: rgba(210,140,70,0.1); }
+  .action-btn:disabled { opacity: 0.35; cursor: default; }
+
+  /* FOOTER */
+  .footer { margin-top: 36px; padding: 28px 24px 20px; text-align: center; position: relative; }
+  .footer::before { content: ''; display: block; width: 50%; height: 1px; margin: 0 auto 24px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.4; }
+  .footer-text { font-family: 'Noto Serif TC', serif; font-size: 11px; color: var(--text-muted); letter-spacing: 0.1em; margin-bottom: 14px; }
+  .ig-btn { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; background: var(--surface2); border: 1px solid rgba(201,168,76,0.3); border-radius: 50px; padding: 10px 22px; transition: all 0.3s ease; -webkit-tap-highlight-color: transparent; }
+  .ig-btn:active { transform: scale(0.95); background: rgba(201,168,76,0.08); }
+  .ig-icon { width: 18px; height: 18px; }
+  .ig-text { font-family: 'Cormorant Garamond', serif; font-size: 14px; font-style: italic; color: var(--gold-light); letter-spacing: 0.1em; }
+  .footer-copy { margin-top: 16px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 10px; color: rgba(154,138,170,0.5); letter-spacing: 0.1em; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--mid); border: 1px solid rgba(201,168,76,0.5); border-radius: 50px; padding: 10px 24px; font-family: 'Noto Serif TC', serif; font-size: 13px; color: var(--gold-light); letter-spacing: 0.1em; pointer-events: none; opacity: 0; transition: all 0.3s ease; z-index: 100; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @keyframes float-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .card-slot { animation: float-in 0.5s ease both; }
+  .card-slot:nth-child(1) { animation-delay: 0s; }
+  .card-slot:nth-child(2) { animation-delay: 0.1s; }
+  .card-slot:nth-child(3) { animation-delay: 0.2s; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+</style>
+</head>
+<body>
+<h2 class="sr-only">Callista 卡莉絲塔占卜小舖 — 三張塔羅牌抽牌</h2>
+<div class="page-wrap">
+
+  <div class="header">
+    <div class="brand-en">Callista</div>
+    <div class="brand-zh">卡莉絲塔的占卜小舖</div>
+    <div class="header-deco">✦ Divination &amp; Tarot Reading ✦</div>
+  </div>
+
+  <div class="moon-deco">
+    <div class="moon-line"></div>
+    <span>☽ ✦ ☾</span>
+    <div class="moon-line r"></div>
+  </div>
+
+  <div class="instruction">
+    靜下心，帶著你的問題<br>點擊下方按鈕，抽取屬於你的三張牌
+  </div>
+
+  <div class="draw-btn-wrap">
+    <button class="draw-btn" onclick="drawCards()" aria-label="抽牌">
+      <div class="draw-btn-inner">
+        <div class="draw-btn-text">
+          ✦ &nbsp;抽取塔羅牌&nbsp; ✦
+          <span class="en">Draw Your Cards</span>
+        </div>
+      </div>
+    </button>
+  </div>
+
+  <div class="position-labels">
+    <div class="pos-label">Past<br>過去</div>
+    <div class="pos-label">Present<br>現在</div>
+    <div class="pos-label">Future<br>未來</div>
+  </div>
+
+  <div class="cards-area" id="cardsArea">
+    <div class="card-slot" id="slot0">
+      <div class="card-frame" id="frame0">
+        <div class="card-back"><div class="card-back-pattern"></div><div class="card-back-inner">✦</div></div>
+      </div>
+      <div class="card-label" id="label0">
+        <div class="card-position">I</div>
+        <div class="card-name" style="color:var(--text-muted)">尚未抽牌</div>
+      </div>
+    </div>
+    <div class="card-slot" id="slot1">
+      <div class="card-frame" id="frame1">
+        <div class="card-back"><div class="card-back-pattern"></div><div class="card-back-inner">✦</div></div>
+      </div>
+      <div class="card-label" id="label1">
+        <div class="card-position">II</div>
+        <div class="card-name" style="color:var(--text-muted)">尚未抽牌</div>
+      </div>
+    </div>
+    <div class="card-slot" id="slot2">
+      <div class="card-frame" id="frame2">
+        <div class="card-back"><div class="card-back-pattern"></div><div class="card-back-inner">✦</div></div>
+      </div>
+      <div class="card-label" id="label2">
+        <div class="card-position">III</div>
+        <div class="card-name" style="color:var(--text-muted)">尚未抽牌</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider">
+    <div class="divider-line"></div><span>✦</span><div class="divider-line"></div>
+  </div>
+
+  <div class="actions">
+    <div class="action-label">✦ &nbsp;複製 · 分享&nbsp; ✦</div>
+    <button class="action-btn copy-btn" id="copyBtn" onclick="copyResult()" disabled>
+      <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+      </svg>
+      複製牌卡結果
+    </button>
+    <div class="action-label" style="margin-top:4px;">傳送給 AI 解讀</div>
+    <div class="btn-row">
+      <button class="action-btn ai-btn-chatgpt" id="gptBtn" onclick="sendToAI('chatgpt')" disabled>
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="#74C49D" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>
+        <span class="btn-label">ChatGPT</span>
+      </button>
+      <button class="action-btn ai-btn-gemini" id="geminiBtn" onclick="sendToAI('gemini')" disabled>
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="#8A64DC" stroke-width="1.5"><polygon points="12,2 15.5,8.5 22,9.3 17,14.1 18.2,21 12,17.8 5.8,21 7,14.1 2,9.3 8.5,8.5"/></svg>
+        <span class="btn-label">Gemini</span>
+      </button>
+      <button class="action-btn ai-btn-claude" id="claudeBtn" onclick="sendToAI('claude')" disabled>
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="#D28C46" stroke-width="1.5"><path d="M12 3L4 19h16L12 3z"/><path d="M12 10v5"/></svg>
+        <span class="btn-label">Claude</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-text">探索更多占卜服務，歡迎追蹤</div>
+    <a href="https://www.instagram.com/callista_a_a" target="_blank" class="ig-btn">
+      <svg class="ig-icon" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="0.5" fill="#C9A84C"/>
+      </svg>
+      <span class="ig-text">@callista_a_a</span>
+    </a>
+    <div class="footer-copy">© Callista · All Rights Reserved</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── 完整 78 張偉特塔羅 ──
+// 圖片來源：Wikimedia Commons 公開授權 (Public Domain / PD-Art)
+// 格式：{ name, en, img }  img = 完整 URL
+const W = "https://upload.wikimedia.org/wikipedia/commons/";
+const TAROT = [
+  // 大阿爾卡納 (0–21)
+  {name:"愚者",      en:"The Fool",           img:W+"9/90/RWS_Tarot_00_Fool.jpg"},
+  {name:"魔術師",    en:"The Magician",        img:W+"1/10/Rider-Waite_Tarot_-_The_Magician.jpg"},
+  {name:"女祭司",    en:"The High Priestess",  img:W+"8/88/RWS_Tarot_02_High_Priestess.jpg"},
+  {name:"皇后",      en:"The Empress",         img:W+"d/d2/RWS_Tarot_03_Empress.jpg"},
+  {name:"皇帝",      en:"The Emperor",         img:W+"c/c3/RWS_Tarot_04_Emperor.jpg"},
+  {name:"教皇",      en:"The Hierophant",      img:W+"8/8d/RWS_Tarot_05_Hierophant.jpg"},
+  {name:"戀人",      en:"The Lovers",          img:W+"3/3a/TheLovers.jpg"},
+  {name:"戰車",      en:"The Chariot",         img:W+"9/9b/RWS_Tarot_07_Chariot.jpg"},
+  {name:"力量",      en:"Strength",            img:W+"f/f5/RWS_Tarot_08_Strength.jpg"},
+  {name:"隱者",      en:"The Hermit",          img:W+"4/4d/RWS_Tarot_09_Hermit.jpg"},
+  {name:"命運之輪",  en:"Wheel of Fortune",    img:W+"3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg"},
+  {name:"正義",      en:"Justice",             img:W+"e/e0/RWS_Tarot_11_Justice.jpg"},
+  {name:"倒吊人",    en:"The Hanged Man",      img:W+"2/2b/RWS_Tarot_12_Hanged_Man.jpg"},
+  {name:"死神",      en:"Death",               img:W+"d/d7/RWS_Tarot_13_Death.jpg"},
+  {name:"節制",      en:"Temperance",          img:W+"f/f8/RWS_Tarot_14_Temperance.jpg"},
+  {name:"惡魔",      en:"The Devil",           img:W+"5/55/RWS_Tarot_15_Devil.jpg"},
+  {name:"塔",        en:"The Tower",           img:W+"5/53/RWS_Tarot_16_Tower.jpg"},
+  {name:"星星",      en:"The Star",            img:W+"d/db/RWS_Tarot_17_Star.jpg"},
+  {name:"月亮",      en:"The Moon",            img:W+"7/7f/RWS_Tarot_18_Moon.jpg"},
+  {name:"太陽",      en:"The Sun",             img:W+"1/17/RWS_Tarot_19_Sun.jpg"},
+  {name:"審判",      en:"Judgement",           img:W+"d/dd/RWS_Tarot_20_Judgement.jpg"},
+  {name:"世界",      en:"The World",           img:W+"f/ff/RWS_Tarot_21_World.jpg"},
+  // 權杖牌組
+  {name:"權杖王牌",  en:"Ace of Wands",        img:W+"1/11/Wands01.jpg"},
+  {name:"權杖二",    en:"Two of Wands",        img:W+"0/0f/Wands02.jpg"},
+  {name:"權杖三",    en:"Three of Wands",      img:W+"f/ff/Wands03.jpg"},
+  {name:"權杖四",    en:"Four of Wands",       img:W+"a/a4/Wands04.jpg"},
+  {name:"權杖五",    en:"Five of Wands",       img:W+"9/9d/Wands05.jpg"},
+  {name:"權杖六",    en:"Six of Wands",        img:W+"3/3b/Wands06.jpg"},
+  {name:"權杖七",    en:"Seven of Wands",      img:W+"e/e4/Wands07.jpg"},
+  {name:"權杖八",    en:"Eight of Wands",      img:W+"6/6b/Wands08.jpg"},
+  {name:"權杖九",    en:"Nine of Wands",       img:W+"4/4d/Wands09.jpg"},
+  {name:"權杖十",    en:"Ten of Wands",        img:W+"0/0b/Wands10.jpg"},
+  {name:"權杖侍者",  en:"Page of Wands",       img:W+"6/6a/Wands11.jpg"},
+  {name:"權杖騎士",  en:"Knight of Wands",     img:W+"1/16/Wands12.jpg"},
+  {name:"權杖王后",  en:"Queen of Wands",      img:W+"b/b0/Wands13.jpg"},
+  {name:"權杖國王",  en:"King of Wands",       img:W+"c/ce/Wands14.jpg"},
+  // 聖杯牌組
+  {name:"聖杯王牌",  en:"Ace of Cups",         img:W+"3/36/Cups01.jpg"},
+  {name:"聖杯二",    en:"Two of Cups",         img:W+"f/f8/Cups02.jpg"},
+  {name:"聖杯三",    en:"Three of Cups",       img:W+"7/7a/Cups03.jpg"},
+  {name:"聖杯四",    en:"Four of Cups",        img:W+"3/35/Cups04.jpg"},
+  {name:"聖杯五",    en:"Five of Cups",        img:W+"d/d7/Cups05.jpg"},
+  {name:"聖杯六",    en:"Six of Cups",         img:W+"1/17/Cups06.jpg"},
+  {name:"聖杯七",    en:"Seven of Cups",       img:W+"a/ae/Cups07.jpg"},
+  {name:"聖杯八",    en:"Eight of Cups",       img:W+"6/60/Cups08.jpg"},
+  {name:"聖杯九",    en:"Nine of Cups",        img:W+"2/24/Cups09.jpg"},
+  {name:"聖杯十",    en:"Ten of Cups",         img:W+"8/84/Cups10.jpg"},
+  {name:"聖杯侍者",  en:"Page of Cups",        img:W+"a/ab/Cups11.jpg"},
+  {name:"聖杯騎士",  en:"Knight of Cups",      img:W+"f/fa/Cups12.jpg"},
+  {name:"聖杯王后",  en:"Queen of Cups",       img:W+"6/62/Cups13.jpg"},
+  {name:"聖杯國王",  en:"King of Cups",        img:W+"0/04/Cups14.jpg"},
+  // 寶劍牌組
+  {name:"寶劍王牌",  en:"Ace of Swords",       img:W+"1/1a/Swords01.jpg"},
+  {name:"寶劍二",    en:"Two of Swords",       img:W+"9/9e/Swords02.jpg"},
+  {name:"寶劍三",    en:"Three of Swords",     img:W+"0/02/Swords03.jpg"},
+  {name:"寶劍四",    en:"Four of Swords",      img:W+"b/bf/Swords04.jpg"},
+  {name:"寶劍五",    en:"Five of Swords",      img:W+"2/23/Swords05.jpg"},
+  {name:"寶劍六",    en:"Six of Swords",       img:W+"2/29/Swords06.jpg"},
+  {name:"寶劍七",    en:"Seven of Swords",     img:W+"3/34/Swords07.jpg"},
+  {name:"寶劍八",    en:"Eight of Swords",     img:W+"a/a7/Swords08.jpg"},
+  {name:"寶劍九",    en:"Nine of Swords",      img:W+"2/2f/Swords09.jpg"},
+  {name:"寶劍十",    en:"Ten of Swords",       img:W+"d/d4/Swords10.jpg"},
+  {name:"寶劍侍者",  en:"Page of Swords",      img:W+"4/4c/Swords11.jpg"},
+  {name:"寶劍騎士",  en:"Knight of Swords",    img:W+"b/b0/Swords12.jpg"},
+  {name:"寶劍王后",  en:"Queen of Swords",     img:W+"d/d4/Swords13.jpg"},
+  {name:"寶劍國王",  en:"King of Swords",      img:W+"3/33/Swords14.jpg"},
+  // 星幣牌組
+  {name:"星幣王牌",  en:"Ace of Pentacles",    img:W+"f/fd/Pents01.jpg"},
+  {name:"星幣二",    en:"Two of Pentacles",    img:W+"9/9f/Pents02.jpg"},
+  {name:"星幣三",    en:"Three of Pentacles",  img:W+"4/42/Pents03.jpg"},
+  {name:"星幣四",    en:"Four of Pentacles",   img:W+"3/35/Pents04.jpg"},
+  {name:"星幣五",    en:"Five of Pentacles",   img:W+"9/96/Pents05.jpg"},
+  {name:"星幣六",    en:"Six of Pentacles",    img:W+"a/a6/Pents06.jpg"},
+  {name:"星幣七",    en:"Seven of Pentacles",  img:W+"6/6a/Pents07.jpg"},
+  {name:"星幣八",    en:"Eight of Pentacles",  img:W+"4/49/Pents08.jpg"},
+  {name:"星幣九",    en:"Nine of Pentacles",   img:W+"f/f0/Pents09.jpg"},
+  {name:"星幣十",    en:"Ten of Pentacles",    img:W+"4/42/Pents10.jpg"},
+  {name:"星幣侍者",  en:"Page of Pentacles",   img:W+"e/ec/Pents11.jpg"},
+  {name:"星幣騎士",  en:"Knight of Pentacles", img:W+"d/d5/Pents12.jpg"},
+  {name:"星幣王后",  en:"Queen of Pentacles",  img:W+"8/88/Pents13.jpg"},
+  {name:"星幣國王",  en:"King of Pentacles",   img:W+"1/1c/Pents14.jpg"}
+];
+
+const POSITIONS = ["過去","現在","未來"];
+let drawnCards = null;
+let isDrawing = false;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function drawCards() {
+  if (isDrawing) return;
+  isDrawing = true;
+  const shuffled = shuffle(TAROT);
+  drawnCards = shuffled.slice(0,3).map(card => ({...card, reversed: Math.random()<0.5}));
+  [0,1,2].forEach((i,idx) => {
+    const frame = document.getElementById('frame'+i);
+    setTimeout(() => {
+      frame.classList.add('flipping');
+      setTimeout(() => {
+        revealCard(i, drawnCards[i]);
+        frame.classList.remove('flipping');
+      }, 350);
+    }, idx*180);
+  });
+  setTimeout(() => {
+    isDrawing = false;
+    enableButtons();
+  }, 1200);
+}
+
+function revealCard(idx, card) {
+  const frame = document.getElementById('frame'+idx);
+  const label = document.getElementById('label'+idx);
+  frame.innerHTML = '';
+  frame.classList.add('revealed');
+  if (card.reversed) frame.classList.add('reversed');
+  else frame.classList.remove('reversed');
+
+  const img = document.createElement('img');
+  img.alt = card.en;
+  img.style.width = '100%';
+  img.style.height = '100%';
+  img.style.objectFit = 'cover';
+  img.style.display = 'block';
+  // fallback placeholder if image fails
+  img.onerror = function() {
+    frame.style.background = 'linear-gradient(135deg,#1A1030,#2D1D50)';
+    frame.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:8px;padding:12px;text-align:center"><div style="font-size:22px;color:var(--gold);opacity:0.5">✦</div><div style="font-family:Cormorant Garamond,serif;font-size:10px;font-style:italic;color:var(--gold-light);opacity:0.7;letter-spacing:0.08em;line-height:1.4">'+card.en+'</div></div>';
+  };
+  img.src = card.img;
+  frame.appendChild(img);
+
+  const ori = card.reversed ? '逆位' : '正位';
+  label.innerHTML = `
+    <div class="card-position">${['I','II','III'][idx]}</div>
+    <div class="card-name">${card.name}</div>
+    <div><span class="card-orientation ${card.reversed?'reversed':'upright'}">${ori}</span></div>
+    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:9px;color:var(--text-muted);margin-top:3px;letter-spacing:0.05em">${card.en}</div>
+  `;
+}
+
+function enableButtons() {
+  ['copyBtn','gptBtn','geminiBtn','claudeBtn'].forEach(id => {
+    document.getElementById(id).disabled = false;
+  });
+}
+
+function getResultText() {
+  if (!drawnCards) return '';
+  return drawnCards.map((c,i) => `${POSITIONS[i]}：${c.name} (${c.reversed?'逆位':'正位'})`).join('\n');
+}
+
+function getAIPrompt() {
+  if (!drawnCards) return '';
+  const cards = drawnCards.map((c,i) => `${POSITIONS[i]}：${c.name}（${c.reversed?'逆位':'正位'}）`).join('、');
+  return `我抽到了三張塔羅牌，請幫我解讀：${cards}。請從過去、現在、未來的角度，分析這三張牌的整體訊息與建議。`;
+}
+
+function copyResult() {
+  const text = getResultText();
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => showToast('✦ 已複製牌卡結果')).catch(() => showToast('請手動複製'));
+}
+
+function sendToAI(service) {
+  const prompt = encodeURIComponent(getAIPrompt());
+  const urls = {
+    chatgpt: 'https://chat.openai.com/?q='+prompt,
+    gemini:  'https://gemini.google.com/app?q='+prompt,
+    claude:  'https://claude.ai/new?q='+prompt
+  };
+  window.open(urls[service],'_blank');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>
